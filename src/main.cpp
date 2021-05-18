@@ -1,6 +1,6 @@
 #include <wx/wxprec.h>
 
-#include "../form/MainFrame.h"
+#include "../include/frame/MainFrame.h"
 
 class App : public wxApp
 {
