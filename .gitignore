@@ -4,3 +4,4 @@ tangram.sln
 tangram.vcxproj
 tangram.vcxproj.filters
 tangram.vcxproj.user
+Debug/*
