@@ -33,6 +33,7 @@ class Frame : public wxFrame
 		wxPanel* display_panel;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnClick( wxMouseEvent& event ) { event.Skip(); }
 		virtual void Render( wxPaintEvent& event ) { event.Skip(); }
 		
 	

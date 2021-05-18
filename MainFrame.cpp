@@ -7,6 +7,11 @@ Frame( parent )
 	display_panel->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
+void MainFrame::OnClick( wxMouseEvent& event )
+{
+// TODO: Implement OnClick
+}
+
 void MainFrame::Render( wxPaintEvent& event )
 {
 int w, h;
@@ -24,5 +29,4 @@ dc.DrawLine(w - 480 + 120, 20, w - 120, 20);
 dc.DrawLine(w - 480 + 120, 20, w - 480 + 120, 260);
 dc.DrawLine(w - 480 + 120, 260, w - 120, 260);
 dc.DrawLine(w - 120, 20, w - 120, 260);
-
 }

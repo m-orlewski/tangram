@@ -19,13 +19,12 @@ class MainFrame : public Frame
 {
 	protected:
 		// Handlers for Frame events.
+		void OnClick( wxMouseEvent& event );
 		void Render( wxPaintEvent& event );
 	public:
 		/** Constructor */
 		MainFrame( wxWindow* parent );
 	//// end generated class members
-
-
 };
 
 #endif // __MainFrame__
