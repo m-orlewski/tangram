@@ -29,4 +29,8 @@ void MainFrame::Render(wxPaintEvent& event)
 	dc.SetPen(wxPen(wxColour("black"), 1));
 	dc.DrawLine(800, 0, 800, 720);
 	dc.DrawLine(800, 320, 1280, 320);
+	for (auto &object : container)
+	{
+		(*object).Draw(dc);
+	}
 }
