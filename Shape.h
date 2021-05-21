@@ -13,9 +13,12 @@ public:
 	virtual void Draw(wxAutoBufferedPaintDC &panel) = 0;
 	virtual void Rotate() = 0;
 	virtual void Move(int x, int y) = 0;
+	virtual wxPoint* GetPoints() const = 0;
 	virtual ~Shape() {};
 protected:
 	wxColour color;
+	wxPoint* start;
+	wxPoint* pos;
 public:
 	const Type type;
 };

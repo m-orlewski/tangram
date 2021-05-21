@@ -26,14 +26,14 @@ Frame::Frame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPo
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	display_panel->Connect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( Frame::OnClick ), NULL, this );
+	display_panel->Connect( wxEVT_LEFT_DOWN, wxMouseEventHandler( Frame::OnClick ), NULL, this );
 	display_panel->Connect( wxEVT_PAINT, wxPaintEventHandler( Frame::Render ), NULL, this );
 }
 
 Frame::~Frame()
 {
 	// Disconnect Events
-	display_panel->Disconnect( wxEVT_LEFT_DCLICK, wxMouseEventHandler( Frame::OnClick ), NULL, this );
+	display_panel->Disconnect( wxEVT_LEFT_DOWN, wxMouseEventHandler( Frame::OnClick ), NULL, this );
 	display_panel->Disconnect( wxEVT_PAINT, wxPaintEventHandler( Frame::Render ), NULL, this );
 	
 }
