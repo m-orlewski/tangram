@@ -1,7 +1,5 @@
 #include "MainFrame.h"
 
-bool isInside(const Shape& shape, wxPoint& mouse, bool on_display=true);
-
 MainFrame::MainFrame(wxWindow* parent)
 	:
 	Frame(parent)
@@ -25,7 +23,10 @@ void MainFrame::OnClick(wxMouseEvent& event)
 	{
 		for (auto& object : display)
 		{
-			
+			if (isInside(*object, mouse, true))
+			{
+				//object clicked
+			}
 		}
 	}
 	else if (mouse.y < 320)
@@ -34,7 +35,7 @@ void MainFrame::OnClick(wxMouseEvent& event)
 		{
 			if (isInside(*object, mouse, false))
 			{
-
+				//object clicked
 			}
 		}
 	}
@@ -50,11 +51,12 @@ void MainFrame::Render(wxPaintEvent& event)
 	dc.DrawLine(800, 0, 800, 720);
 	dc.DrawLine(800, 320, 1280, 320);
 
-	for (auto &object : container)
+	for (auto& object : container)
 	{
 		(*object).Draw(dc);
 	}
 }
+
 
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 {
@@ -70,5 +72,68 @@ bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 	else
 		border = wxPoint(1280, mouse.y);
 
-	return true;
+	const wxPoint* polygon = shape.GetPoints();
+
+	int count = 0;
+	int i = 0;
+
+	do
+	{
+		int next = (i + 1) % n;
+
+		if (Intersect(polygon[i], polygon[next], mouse, border))
+		{
+			if (Orientation(polygon[i], mouse, polygon[next]) == 0)
+				return Segment(polygon[i], mouse, polygon[next]);
+
+			count++;
+		}
+		i = next;
+	} while (i != 0);
+
+	return (count % 2 == 1);
+}
+
+bool Intersect(const wxPoint& p1, const wxPoint& q1, const wxPoint& p2, const wxPoint& q2)
+{
+	int o1 = Orientation(p1, q1, p2);
+	int o2 = Orientation(p1, q1, q2);
+	int o3 = Orientation(p2, q2, p1);
+	int o4 = Orientation(p2, q2, q1);
+
+	if (o1 != o2 && o3 != o4)
+		return true;
+
+	if (o1 == 0 && Segment(p1, p2, q1))
+		return true;
+
+	if (o2 == 0 && Segment(p1, q2, q1))
+		return true;
+
+	if (o3 == 0 && Segment(p2, p1, q2))
+		return true;
+
+	if (o4 == 0 && Segment(p2, q1, q2))
+		return true;
+
+	return false;
+}
+
+int Orientation(const wxPoint& p, const wxPoint& q, const wxPoint& r)
+{
+	int a = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+
+	if (a > 0)
+		return 1;
+	else if (a < 0)
+		return 2;
+	else
+		return 0;
+}
+
+bool Segment(const wxPoint& p, const wxPoint& q, const wxPoint& r)
+{
+	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y))
+		return true;
+	return false;
 }
