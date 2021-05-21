@@ -31,10 +31,7 @@ Vector::Vector()
     dane[2] = 1.0;
 }
 
-void Vector::wypisz(void)
-{
-    printf("(%2.3lf,%2.3lf,%2.3lf)\n", dane[0], dane[1], dane[2]);
-}
+
 
 void Vector::ustaw_wsp(double pierwsza, double druga)
 {
@@ -67,13 +64,6 @@ Matrix::Matrix()
         i++;
     }
     dane[2][2] = 1.0;
-}
-
-void Matrix::wypisz(void)
-{
-    printf("\n|%2.3lf,%2.3lf,%2.3lf|\n", dane[0][0], dane[0][1], dane[0][2]);
-    printf("|%2.3lf,%2.3lf,%2.3lf|\n", dane[1][0], dane[1][1], dane[1][2]);
-    printf("|%2.3lf,%2.3lf,%2.3lf|\n", dane[2][0], dane[2][1], dane[2][2]);
 }
 
 Matrix Matrix::operator* (const Matrix macierz)
