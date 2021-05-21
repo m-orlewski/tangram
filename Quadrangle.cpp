@@ -13,7 +13,7 @@ Quadrangle::Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, i
 }
 void Quadrangle::Draw(wxAutoBufferedPaintDC& panel)
 {
-	panel.SetPen(wxPen(wxColour("red"), 5));
+	panel.SetPen(wxPen(wxColour("red"), 1));
 	for (int i = 0; i < 3; i++)
 	{
 		panel.DrawLine(x[i], y[i], x[i + 1], y[i + 1]);

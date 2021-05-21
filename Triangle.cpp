@@ -11,7 +11,7 @@ Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3)
 }
 void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 {
-	panel.SetPen(wxPen(wxColour("green"), 5));
+	panel.SetPen(wxPen(wxColour("green"), 1));
 	for (int i = 0; i < 2; i++)
 	{
 		panel.DrawLine(x[i], y[i], x[i + 1], y[i + 1]);
