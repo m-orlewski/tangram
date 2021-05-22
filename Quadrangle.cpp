@@ -24,7 +24,7 @@ void Quadrangle::Draw(wxAutoBufferedPaintDC& panel)
 	}
 	panel.DrawLine(pos[3].x, pos[3].y, pos[0].x, pos[0].y);
 }
-void Quadrangle::Rotate()
+void Quadrangle::Rotate(double radian)
 {
 	//to do after Przemys³aw
 }
