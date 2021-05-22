@@ -41,6 +41,16 @@ void MainFrame::OnClick(wxMouseEvent& event)
 	}
 }
 
+void MainFrame::OnClickUp(wxMouseEvent& event)
+{
+	// TODO: Implement OnClickUp
+}
+
+void MainFrame::MouseMove(wxMouseEvent& event)
+{
+	// TODO: Implement MouseMove
+}
+
 void MainFrame::Render(wxPaintEvent& event)
 {
 	wxAutoBufferedPaintDC dc(display_panel);
@@ -56,6 +66,7 @@ void MainFrame::Render(wxPaintEvent& event)
 		(*object).Draw(dc);
 	}
 }
+
 
 
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)

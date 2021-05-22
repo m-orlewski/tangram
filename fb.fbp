@@ -88,7 +88,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="0">
+            <object class="wxBoxSizer" expanded="1">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer1</property>
                 <property name="orient">wxVERTICAL</property>
@@ -157,11 +157,11 @@
                         <event name="OnLeaveWindow"></event>
                         <event name="OnLeftDClick"></event>
                         <event name="OnLeftDown">OnClick</event>
-                        <event name="OnLeftUp"></event>
+                        <event name="OnLeftUp">OnClickUp</event>
                         <event name="OnMiddleDClick"></event>
                         <event name="OnMiddleDown"></event>
                         <event name="OnMiddleUp"></event>
-                        <event name="OnMotion"></event>
+                        <event name="OnMotion">MouseMove</event>
                         <event name="OnMouseEvents"></event>
                         <event name="OnMouseWheel"></event>
                         <event name="OnPaint">Render</event>

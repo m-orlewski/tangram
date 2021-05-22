@@ -29,6 +29,8 @@ class MainFrame : public Frame
 	protected:
 		// Handlers for Frame events.
 		void OnClick( wxMouseEvent& event );
+		void OnClickUp( wxMouseEvent& event );
+		void MouseMove( wxMouseEvent& event );
 		void Render( wxPaintEvent& event );
 	public:
 		/** Constructor */
