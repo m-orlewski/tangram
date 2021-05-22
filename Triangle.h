@@ -10,8 +10,6 @@ public:
 	void Draw(wxAutoBufferedPaintDC& panel) override;
 	void Rotate() override;
 	void Move(int dx, int dy) override;
+	wxPoint* GetPoints() const override { return pos; }
 	~Triangle();
-private:
-	wxPoint start[3];
-	wxPoint pos[3];
 };

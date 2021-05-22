@@ -2,6 +2,9 @@
 
 Quadrangle::Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, wxColour c): Shape(c, quadrangle)
 {
+	start = new wxPoint[4];
+	pos = new wxPoint[4];
+
 	start[0].x = pos[0].x = x1;
 	start[1].x = pos[1].x = x2;
 	start[2].x = pos[2].x = x3;
@@ -39,5 +42,6 @@ void Quadrangle::Move(int dx, int dy)
 }
 Quadrangle::~Quadrangle()
 {
-
+	delete[] start;
+	delete[] pos;
 }
