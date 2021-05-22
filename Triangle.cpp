@@ -22,9 +22,45 @@ void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 	}
 	panel.DrawLine(pos[2].x, pos[2].y, pos[0].x, pos[0].y);
 }
-void Triangle::Rotate()
+void Triangle::Rotate(double radian)
 {
-	//to do after Przemys³aw
+	
+	Matrix rotate;
+	rotate.dane[0][0] = cos(radian);
+	rotate.dane[0][1] = -sin(radian);
+	rotate.dane[0][2] = 0.;
+
+	rotate.dane[1][0] = sin(radian);
+	rotate.dane[1][1] = cos(radian);
+	rotate.dane[1][2] = 0.;
+
+	rotate.dane[2][0] = 0.;
+	rotate.dane[2][1] = 0.;
+	rotate.dane[2][2] = 1.;
+
+	Vector P1, P2, P3;
+	P1.dane[0] = pos[0].x;
+	P1.dane[1] = pos[0].y;
+
+	P2.dane[0] = pos[1].x;
+	P2.dane[1] = pos[1].y;
+
+	P3.dane[0] = pos[2].x;
+	P3.dane[1] = pos[2].y;
+
+	P1 = rotate* P1;
+	P2 = rotate* P2;
+	P3 = rotate* P3;
+
+	pos[0].x = P1.dane[0];
+	pos[0].y = P1.dane[1];
+
+	pos[1].x = P2.dane[0];
+	pos[1].y = P2.dane[1];
+
+	pos[2].x = P3.dane[0];
+	pos[2].y = P3.dane[1];
+	
 }
 void Triangle::Move(int dx, int dy)
 {
