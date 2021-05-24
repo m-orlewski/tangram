@@ -62,7 +62,7 @@ void Triangle::Rotate(double radian)
 	pos[2].y = P3.dane[1];
 	
 }
-void Triangle::Move(int dx, int dy)
+bool Triangle::Move(int dx, int dy)
 {
 	pos[0].x += dx;
 	pos[1].x += dx;
@@ -70,6 +70,19 @@ void Triangle::Move(int dx, int dy)
 	pos[0].y += dy;
 	pos[1].y += dy;
 	pos[2].y += dy;
+	if (0 >= pos[0].x || pos[0].x >= 1240 || 0 >= pos[1].x || pos[1].x >= 1240 || 0 >= pos[2].x || pos[2].x >= 1240 ||
+		0 >= pos[0].y || pos[0].y >= 700 || 0 >= pos[1].y || pos[1].y >= 700 || 0 >= pos[2].y || pos[2].y >= 700)
+	{
+		pos[0].x = start[0].x;
+		pos[1].x = start[1].x;
+		pos[2].x = start[2].x;
+
+		pos[0].y = start[0].y;
+		pos[1].y = start[1].y;
+		pos[2].y = start[2].y;
+		return false;
+	}
+	return true;
 }
 Triangle::~Triangle()
 {

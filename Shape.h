@@ -13,7 +13,7 @@ public:
 	Shape(wxColour c, Type t) : color(c), type(t) {}
 	virtual void Draw(wxAutoBufferedPaintDC &panel) = 0;
 	virtual void Rotate(double radian) = 0;
-	virtual void Move(int x, int y) = 0;
+	virtual bool Move(int x, int y) = 0;
 	virtual wxPoint* GetPoints() const = 0;
 	virtual ~Shape() {};
 protected:

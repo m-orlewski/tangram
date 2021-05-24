@@ -29,17 +29,22 @@ class MainFrame : public Frame
 	protected:
 		// Handlers for Frame events.
 		void OnClick( wxMouseEvent& event );
-		void OnClickUp( wxMouseEvent& event );
-		void MouseMove( wxMouseEvent& event );
 		void Render( wxPaintEvent& event );
 	public:
 		/** Constructor */
 		MainFrame( wxWindow* parent );
 	//// end generated class members
+
+		void OnClickUp(wxMouseEvent& event);
+		void Mouse_Move(wxMouseEvent& event);
 protected:
 	std::vector<std::unique_ptr<Shape>> container;
 	std::vector<std::unique_ptr<Shape>> display;
 
+	Shape* moving = nullptr;
+	wxPoint mouse_pos;
+	wxPoint mouse_prev;
+	bool dragging = false;
 };
 
 #endif // __MainFrame__
