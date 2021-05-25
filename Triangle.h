@@ -11,5 +11,6 @@ public:
 	void Rotate(double radian) override;
 	void Move(int dx, int dy) override;
 	wxPoint* GetPoints() const override { return pos; }
+	void Reset() const override;
 	~Triangle();
 };

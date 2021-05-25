@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c): Shape(c, triangle)
+Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c): Shape(c, Type::TRIANGLE)
 {
 	start = new wxPoint[3];
 	pos = new wxPoint[3];
@@ -16,15 +16,10 @@ Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c): 
 void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 {
 	panel.SetPen(color);
-	for (int i = 0; i < 2; i++)
-	{
-		panel.DrawLine(pos[i].x, pos[i].y, pos[i + 1].x, pos[i + 1].y);
-	}
-	panel.DrawLine(pos[2].x, pos[2].y, pos[0].x, pos[0].y);
+	panel.DrawPolygon(3, pos);
 }
 void Triangle::Rotate(double radian)
 {
-	
 	Matrix rotate;
 	rotate.dane[0][0] = cos(radian);
 	rotate.dane[0][1] = -sin(radian);
@@ -38,39 +33,36 @@ void Triangle::Rotate(double radian)
 	rotate.dane[2][1] = 0.;
 	rotate.dane[2][2] = 1.;
 
-	Vector P1, P2, P3;
-	P1.dane[0] = pos[0].x;
-	P1.dane[1] = pos[0].y;
+	Vector P;
+	for (int i = 0; i < 3; i++)
+	{
+		P.dane[0] = pos[i].x;
+		P.dane[1] = pos[i].y;
 
-	P2.dane[0] = pos[1].x;
-	P2.dane[1] = pos[1].y;
+		P = rotate * P;
 
-	P3.dane[0] = pos[2].x;
-	P3.dane[1] = pos[2].y;
-
-	P1 = rotate* P1;
-	P2 = rotate* P2;
-	P3 = rotate* P3;
-
-	pos[0].x = P1.dane[0];
-	pos[0].y = P1.dane[1];
-
-	pos[1].x = P2.dane[0];
-	pos[1].y = P2.dane[1];
-
-	pos[2].x = P3.dane[0];
-	pos[2].y = P3.dane[1];
-	
+		pos[i].x = P.dane[0];
+		pos[i].y = P.dane[1];
+	}
 }
 void Triangle::Move(int dx, int dy)
 {
-	pos[0].x += dx;
-	pos[1].x += dx;
-	pos[2].x += dx;
-	pos[0].y += dy;
-	pos[1].y += dy;
-	pos[2].y += dy;
+	for (int i = 0; i < 3; i++)
+	{
+		pos[i].x += dx;
+		pos[i].y += dy;
+	}
 }
+
+void Triangle::Reset() const
+{
+	for (int i = 0; i < 3; i++)
+	{
+		pos[i].x = start[i].x;
+		pos[i].y = start[i].y;
+	}
+}
+
 Triangle::~Triangle()
 {
 	delete[] start;

@@ -15,7 +15,7 @@ class Matrix
 public:
     double dane[3][3];
     Matrix();
-    friend Vector operator*(const Matrix, const Vector);
-    Matrix operator*(const Matrix macierz);
+    friend Vector operator*(const Matrix&, const Vector&);
+    Matrix operator*(const Matrix& macierz);
 };
 

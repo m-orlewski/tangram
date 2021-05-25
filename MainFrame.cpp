@@ -13,11 +13,22 @@ MainFrame::MainFrame(wxWindow* parent)
 	container.push_back(std::make_unique<Triangle>(1040, 1160, 1160, 260, 140, 260, wxColour("green")));
 	container.push_back(std::make_unique<Quadrangle>(1040, 1100, 1040, 980, 140, 200, 260, 200, wxColour("grey")));
 	container.push_back(std::make_unique<Quadrangle>(1100, 1100, 1160, 1160, 80, 200, 140, 20, wxColour("cyan")));
+
+	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
+	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 }
 
 void MainFrame::OnClick(wxMouseEvent& event)
 {
+	if (dragging)
+	{
+		dragging = false;
+		return;
+	}
+	 
 	wxPoint mouse = wxPoint(event.m_x, event.m_y);
+	mouse_pos = mouse;
+	mouse_prev = mouse;
 
 	if (mouse.x < 800)
 	{
@@ -25,7 +36,8 @@ void MainFrame::OnClick(wxMouseEvent& event)
 		{
 			if (isInside(*object, mouse, true))
 			{
-				//object clicked
+				moving = object.get();
+				dragging = true;
 			}
 		}
 	}
@@ -35,20 +47,31 @@ void MainFrame::OnClick(wxMouseEvent& event)
 		{
 			if (isInside(*object, mouse, false))
 			{
-				//object clicked
+				moving = object.get();
+				dragging = true;
 			}
 		}
+	}
+	
+}
+
+void MainFrame::Mouse_Move(wxMouseEvent& event)
+{
+	if (moving != nullptr)
+	{
+		mouse_prev = mouse_pos;
+		mouse_pos = wxPoint(event.GetX(), event.GetY());
+		moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
+		Refresh();
 	}
 }
 
 void MainFrame::OnClickUp(wxMouseEvent& event)
 {
-	// TODO: Implement OnClickUp
-}
-
-void MainFrame::MouseMove(wxMouseEvent& event)
-{
-	// TODO: Implement MouseMove
+	if (!dragging)
+	{
+		moving = nullptr;
+	}
 }
 
 void MainFrame::Render(wxPaintEvent& event)
@@ -72,7 +95,7 @@ void MainFrame::Render(wxPaintEvent& event)
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 {
 	int n;
-	if (shape.type == triangle)
+	if (shape.type == Type::TRIANGLE)
 		n = 3;
 	else
 		n = 4;
