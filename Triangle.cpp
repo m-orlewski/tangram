@@ -20,6 +20,9 @@ void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 }
 void Triangle::Rotate(double radian)
 {
+	//wyliczyæ œrodek masy
+	Matrix translate1, translate2;
+
 	Matrix rotate;
 	rotate.dane[0][0] = cos(radian);
 	rotate.dane[0][1] = -sin(radian);
@@ -33,13 +36,14 @@ void Triangle::Rotate(double radian)
 	rotate.dane[2][1] = 0.;
 	rotate.dane[2][2] = 1.;
 
+	Matrix transform = translate1 * rotate * translate2;
 	Vector P;
 	for (int i = 0; i < 3; i++)
 	{
 		P.dane[0] = pos[i].x;
 		P.dane[1] = pos[i].y;
 
-		P = rotate * P;
+		P = transform * P;
 
 		pos[i].x = P.dane[0];
 		pos[i].y = P.dane[1];

@@ -68,9 +68,25 @@ void MainFrame::Mouse_Move(wxMouseEvent& event)
 
 void MainFrame::OnClickUp(wxMouseEvent& event)
 {
-	if (!dragging)
+	if (!dragging && moving)
 	{
+		int panel_width, panel_height;
+		display_panel->GetClientSize(&panel_width, &panel_height);
+		int n = (moving->type == Type::TRIANGLE) ? 3 : 4;
+		wxPoint* points = moving->GetPoints();
+		for (int i = 0; i < n; i++)
+		{
+			if (points[i].x <= 0 || points[i].x >= panel_width || points[i].y <= 0 || points[i].y >= panel_height)
+			{
+				moving->Reset();
+				break;
+			}
+		}
+
+
+
 		moving = nullptr;
+		Refresh();
 	}
 }
 
@@ -83,6 +99,7 @@ void MainFrame::Render(wxPaintEvent& event)
 	dc.SetPen(wxPen(wxColour("black"), 1));
 	dc.DrawLine(800, 0, 800, 720);
 	dc.DrawLine(800, 320, 1280, 320);
+
 
 	for (auto& object : container)
 	{
@@ -170,4 +187,10 @@ bool Segment(const wxPoint& p, const wxPoint& q, const wxPoint& r)
 	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y))
 		return true;
 	return false;
+}
+
+MainFrame::~MainFrame()
+{
+	display_panel->Disconnect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
+	display_panel->Disconnect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 }
