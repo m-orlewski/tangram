@@ -61,11 +61,7 @@ void MainFrame::Mouse_Move(wxMouseEvent& event)
 	{
 		mouse_prev = mouse_pos;
 		mouse_pos = wxPoint(event.GetX(), event.GetY());
-		if (!moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y))
-		{
-			dragging = false;
-			moving = nullptr;
-		}
+		moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
 		Refresh();
 	}
 }
@@ -73,7 +69,9 @@ void MainFrame::Mouse_Move(wxMouseEvent& event)
 void MainFrame::OnClickUp(wxMouseEvent& event)
 {
 	if (!dragging)
+	{
 		moving = nullptr;
+	}
 }
 
 void MainFrame::Render(wxPaintEvent& event)
@@ -97,7 +95,7 @@ void MainFrame::Render(wxPaintEvent& event)
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 {
 	int n;
-	if (shape.type == triangle)
+	if (shape.type == Type::TRIANGLE)
 		n = 3;
 	else
 		n = 4;

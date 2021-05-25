@@ -1,7 +1,7 @@
 #include "vecmat.h"
 
 
-Vector operator* (const Matrix macierz, const Vector wektor)
+Vector operator* (const Matrix& macierz, const Vector& wektor)
 {
     Vector TMP_result;
     unsigned int i = 0;
@@ -21,7 +21,7 @@ Vector operator* (const Matrix macierz, const Vector wektor)
 
 
 
-Matrix Matrix::operator*(const Matrix macierz)
+Matrix Matrix::operator*(const Matrix& macierz)
 {
     Matrix TMP_result;
     int i = 0;

@@ -1,6 +1,6 @@
 #include "Quadrangle.h"
 
-Quadrangle::Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, wxColour c): Shape(c, quadrangle)
+Quadrangle::Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, wxColour c): Shape(c, Type::QUADRANGLE)
 {
 	start = new wxPoint[4];
 	pos = new wxPoint[4];
@@ -18,42 +18,53 @@ Quadrangle::Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, i
 void Quadrangle::Draw(wxAutoBufferedPaintDC& panel)
 {
 	panel.SetPen(color);
-	for (int i = 0; i < 3; i++)
-	{
-		panel.DrawLine(pos[i].x, pos[i].y, pos[i + 1].x, pos[i + 1].y);
-	}
-	panel.DrawLine(pos[3].x, pos[3].y, pos[0].x, pos[0].y);
+	panel.DrawPolygon(4, pos);
 }
 void Quadrangle::Rotate(double radian)
 {
-	//to do after Przemys³aw
-}
-bool Quadrangle::Move(int dx, int dy)
-{
-	pos[0].x += dx;
-	pos[1].x += dx;
-	pos[2].x += dx;
-	pos[3].x += dx;
-	pos[0].y += dy;
-	pos[1].y += dy;
-	pos[2].y += dy;
-	pos[3].y += dy;
-	if (0 >= pos[0].x || pos[0].x >= 1280 || 0 >= pos[1].x || pos[1].x >= 1280 || 0 >= pos[2].x || pos[2].x >= 1280 || 0 >= pos[3].x || pos[3].x >= 1280 ||
-		0 >= pos[0].y || pos[0].y >= 720 || 0 >= pos[1].y || pos[1].y >= 720 || 0 >= pos[2].y || pos[2].y >= 720 || 0 >= pos[3].y || pos[3].y >= 720)
-	{
-		pos[0].x = start[0].x;
-		pos[1].x = start[1].x;
-		pos[2].x = start[2].x;
-		pos[3].x = start[3].x;
+	Matrix rotate;
+	rotate.dane[0][0] = cos(radian);
+	rotate.dane[0][1] = -sin(radian);
+	rotate.dane[0][2] = 0.;
 
-		pos[0].y = start[0].y;
-		pos[1].y = start[1].y;
-		pos[2].y = start[2].y;
-		pos[3].y = start[3].y;
-		return false;
+	rotate.dane[1][0] = sin(radian);
+	rotate.dane[1][1] = cos(radian);
+	rotate.dane[1][2] = 0.;
+
+	rotate.dane[2][0] = 0.;
+	rotate.dane[2][1] = 0.;
+	rotate.dane[2][2] = 1.;
+
+	Vector P;
+	for (int i = 0; i < 4; i++)
+	{
+		P.dane[0] = pos[i].x;
+		P.dane[1] = pos[i].y;
+
+		P = rotate * P;
+
+		pos[i].x = P.dane[0];
+		pos[i].y = P.dane[1];
 	}
-	return true;
 }
+void Quadrangle::Move(int dx, int dy)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		pos[i].x += dx;
+		pos[i].y += dy;
+	}
+}
+
+void Quadrangle::Reset() const
+{
+	for (int i = 0; i < 4; i++)
+	{
+		pos[i].x = start[i].x;
+		pos[i].y = start[i].y;
+	}
+}
+
 Quadrangle::~Quadrangle()
 {
 	delete[] start;
