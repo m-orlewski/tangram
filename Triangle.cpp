@@ -20,6 +20,32 @@ void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 }
 void Triangle::Rotate(double radian)
 {
+	//wyliczyæ œrodek masy
+	Matrix translate1, translate2;
+	translate1.dane[0][0] = 1.;
+	translate1.dane[0][1] = 0.;
+	translate1.dane[0][2] = -(pos[0].x + pos[1].x + pos[2].x) / 3; //dx
+
+	translate1.dane[1][0] = 0.;
+	translate1.dane[1][1] = 1.;
+	translate1.dane[1][2] = -(pos[0].y + pos[1].y + pos[2].y) / 3; //dy
+
+	translate1.dane[2][0] = 0.;
+	translate1.dane[2][1] = 0.;
+	translate1.dane[2][2] = 1.;
+
+	translate2.dane[0][0] = 1.;
+	translate2.dane[0][1] = 0.;
+	translate2.dane[0][2] = (pos[0].x + pos[1].x + pos[2].x) / 3; //dx
+
+	translate2.dane[1][0] = 0.;
+	translate2.dane[1][1] = 1.;
+	translate2.dane[1][2] = (pos[0].y + pos[1].y + pos[2].y) / 3; //dy
+
+	translate2.dane[2][0] = 0.;
+	translate2.dane[2][1] = 0.;
+	translate2.dane[2][2] = 1.;
+
 	Matrix rotate;
 	rotate.dane[0][0] = cos(radian);
 	rotate.dane[0][1] = -sin(radian);
@@ -33,13 +59,14 @@ void Triangle::Rotate(double radian)
 	rotate.dane[2][1] = 0.;
 	rotate.dane[2][2] = 1.;
 
+	Matrix transform = translate1 * rotate * translate2;
 	Vector P;
 	for (int i = 0; i < 3; i++)
 	{
 		P.dane[0] = pos[i].x;
 		P.dane[1] = pos[i].y;
 
-		P = rotate * P;
+		P = transform * P;
 
 		pos[i].x = P.dane[0];
 		pos[i].y = P.dane[1];

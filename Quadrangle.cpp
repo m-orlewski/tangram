@@ -22,6 +22,31 @@ void Quadrangle::Draw(wxAutoBufferedPaintDC& panel)
 }
 void Quadrangle::Rotate(double radian)
 {
+
+	Matrix translate1, translate2;
+	translate1.dane[0][0] = 1.;
+	translate1.dane[0][1] = 0.;
+	translate1.dane[0][2] = -(pos[0].x + pos[1].x + pos[2].x + pos[3].x) / 4; //dx
+
+	translate1.dane[1][0] = 0.;
+	translate1.dane[1][1] = 1.;
+	translate1.dane[1][2] = -(pos[0].y + pos[1].y + pos[2].y + pos[3].y) / 4; //dy
+
+	translate1.dane[2][0] = 0.;
+	translate1.dane[2][1] = 0.;
+	translate1.dane[2][2] = 1.;
+
+	translate2.dane[0][0] = 1.;
+	translate2.dane[0][1] = 0.;
+	translate2.dane[0][2] = (pos[0].x + pos[1].x + pos[2].x + pos[3].x) / 4; //dx
+
+	translate2.dane[1][0] = 0.;
+	translate2.dane[1][1] = 1.;
+	translate2.dane[1][2] = (pos[0].y + pos[1].y + pos[2].y + pos[3].y) / 4; //dy
+
+	translate2.dane[2][0] = 0.;
+	translate2.dane[2][1] = 0.;
+	translate2.dane[2][2] = 1.;
 	Matrix rotate;
 	rotate.dane[0][0] = cos(radian);
 	rotate.dane[0][1] = -sin(radian);

@@ -18,11 +18,12 @@ public:
 	virtual void Move(int x, int y) = 0;
 	virtual wxPoint* GetPoints() const = 0;
 	virtual void Reset() const = 0;
-	virtual ~Shape() {};
+	virtual ~Shape() {}
 protected:
 	wxColour color;
 	wxPoint* start;
 	wxPoint* pos;
 public:
 	const Type type;
+	bool in_container = true;
 };
