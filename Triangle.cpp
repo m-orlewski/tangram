@@ -16,57 +16,40 @@ Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c): 
 void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 {
 	panel.SetPen(color);
+	panel.SetBrush(color);
 	panel.DrawPolygon(3, pos);
 }
-void Triangle::Rotate(double radian)
+void Triangle::Rotate(double angle)
 {
-	//wyliczyæ œrodek masy
+	int x0 = (pos[0].x + pos[1].x + pos[2].x) / 3;
+	int y0 = (pos[0].y + pos[1].y + pos[2].y) / 3;
+	angle *= M_PI / 180.0;
+
 	Matrix translate1, translate2;
 	translate1.dane[0][0] = 1.;
-	translate1.dane[0][1] = 0.;
-	translate1.dane[0][2] = -(pos[0].x + pos[1].x + pos[2].x) / 3; //dx
-
-	translate1.dane[1][0] = 0.;
+	translate1.dane[0][2] = -x0; //dx
 	translate1.dane[1][1] = 1.;
-	translate1.dane[1][2] = -(pos[0].y + pos[1].y + pos[2].y) / 3; //dy
-
-	translate1.dane[2][0] = 0.;
-	translate1.dane[2][1] = 0.;
-	translate1.dane[2][2] = 1.;
+	translate1.dane[1][2] = -y0; //dy
 
 	translate2.dane[0][0] = 1.;
-	translate2.dane[0][1] = 0.;
-	translate2.dane[0][2] = (pos[0].x + pos[1].x + pos[2].x) / 3; //dx
-
-	translate2.dane[1][0] = 0.;
+	translate2.dane[0][2] = x0; //dx
 	translate2.dane[1][1] = 1.;
-	translate2.dane[1][2] = (pos[0].y + pos[1].y + pos[2].y) / 3; //dy
-
-	translate2.dane[2][0] = 0.;
-	translate2.dane[2][1] = 0.;
-	translate2.dane[2][2] = 1.;
+	translate2.dane[1][2] = y0; //dy
 
 	Matrix rotate;
-	rotate.dane[0][0] = cos(radian);
-	rotate.dane[0][1] = -sin(radian);
-	rotate.dane[0][2] = 0.;
+	rotate.dane[0][0] = cos(angle);
+	rotate.dane[0][1] = -sin(angle);
+	rotate.dane[1][0] = sin(angle);
+	rotate.dane[1][1] = cos(angle);
 
-	rotate.dane[1][0] = sin(radian);
-	rotate.dane[1][1] = cos(radian);
-	rotate.dane[1][2] = 0.;
-
-	rotate.dane[2][0] = 0.;
-	rotate.dane[2][1] = 0.;
-	rotate.dane[2][2] = 1.;
-
-	Matrix transform = translate1 * rotate * translate2;
+	Matrix transform = translate2 * rotate * translate1;
 	Vector P;
 	for (int i = 0; i < 3; i++)
 	{
 		P.dane[0] = pos[i].x;
 		P.dane[1] = pos[i].y;
 
-		P = transform * P;
+		P = transform *P;
 
 		pos[i].x = P.dane[0];
 		pos[i].y = P.dane[1];

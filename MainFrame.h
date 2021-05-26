@@ -39,6 +39,7 @@ class MainFrame : public Frame
 
 		void OnClickUp(wxMouseEvent& event);
 		void Mouse_Move(wxMouseEvent& event);
+		void OnScroll(wxMouseEvent& event);
 		~MainFrame();
 protected:
 	std::vector<std::unique_ptr<Shape>> shapes;

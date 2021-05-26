@@ -16,6 +16,7 @@ MainFrame::MainFrame(wxWindow* parent)
 
 	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
+	display_panel->Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(MainFrame::OnScroll), NULL, this);
 }
 
 void MainFrame::OnClick(wxMouseEvent& event)
@@ -118,6 +119,22 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 			moving->in_container = true;
 		}
 		moving = nullptr;
+		Refresh();
+	}
+}
+
+void MainFrame::OnScroll(wxMouseEvent& event)
+{
+	if (moving)
+	{
+		if (event.GetWheelRotation() < 0)
+		{
+			moving->Rotate(-30);
+		}
+		else
+		{
+			moving->Rotate(30);
+		}
 		Refresh();
 	}
 }
