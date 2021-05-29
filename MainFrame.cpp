@@ -6,38 +6,136 @@ MainFrame::MainFrame(wxWindow* parent)
 {
 	display_panel->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-	container.push_back(std::make_unique<Triangle>(920, 1160, 1040, 20, 20, 140, wxColour("red")));
-	container.push_back(std::make_unique<Triangle>(920, 920, 1040, 20, 260, 140, wxColour("yellow")));
-	container.push_back(std::make_unique<Triangle>(920, 980, 1040, 260, 200, 260, wxColour("blue")));
-	container.push_back(std::make_unique<Triangle>(1040, 1100, 1100, 140, 200, 80, wxColour("black")));
-	container.push_back(std::make_unique<Triangle>(1040, 1160, 1160, 260, 140, 260, wxColour("green")));
-	container.push_back(std::make_unique<Quadrangle>(1040, 1100, 1040, 980, 140, 200, 260, 200, wxColour("grey")));
-	container.push_back(std::make_unique<Quadrangle>(1100, 1100, 1160, 1160, 80, 200, 140, 20, wxColour("cyan")));
+	shapes.push_back(std::make_unique<Triangle>(920, 1160, 1040, 20, 20, 140, wxColour("red")));
+	shapes.push_back(std::make_unique<Triangle>(920, 920, 1040, 20, 260, 140, wxColour("yellow")));
+	shapes.push_back(std::make_unique<Triangle>(920, 980, 1040, 260, 200, 260, wxColour("blue")));
+	shapes.push_back(std::make_unique<Triangle>(1040, 1100, 1100, 140, 200, 80, wxColour("black")));
+	shapes.push_back(std::make_unique<Triangle>(1040, 1160, 1160, 260, 140, 260, wxColour("green")));
+	shapes.push_back(std::make_unique<Quadrangle>(1040, 1100, 1040, 980, 140, 200, 260, 200, wxColour("grey")));
+	shapes.push_back(std::make_unique<Quadrangle>(1100, 1100, 1160, 1160, 80, 200, 140, 20, wxColour("cyan")));
+
+	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
+	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
+	display_panel->Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(MainFrame::OnScroll), NULL, this);
 }
 
 void MainFrame::OnClick(wxMouseEvent& event)
 {
+	if (dragging)
+	{
+		dragging = false;
+		return;
+	}
+	 
 	wxPoint mouse = wxPoint(event.m_x, event.m_y);
+	mouse_pos = mouse;
+	mouse_prev = mouse;
 
 	if (mouse.x < 800)
 	{
-		for (auto& object : display)
+		for (auto& object : shapes)
 		{
-			if (isInside(*object, mouse, true))
+			if (!object.get()->in_container && isInside(*object, mouse, true))
 			{
-				//object clicked
+				moving = object.get();
+				dragging = true;
 			}
 		}
 	}
 	else if (mouse.y < 320)
 	{
-		for (auto& object : container)
+		for (auto& object : shapes)
 		{
-			if (isInside(*object, mouse, false))
+			if (object.get()->in_container && isInside(*object, mouse, false))
 			{
-				//object clicked
+				moving = object.get();
+				dragging = true;
 			}
 		}
+	}
+	
+}
+
+void MainFrame::Mouse_Move(wxMouseEvent& event)
+{
+	if (moving != nullptr)
+	{
+		mouse_prev = mouse_pos;
+		mouse_pos = wxPoint(event.GetX(), event.GetY());
+		moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
+		Refresh();
+	}
+}
+
+void MainFrame::OnClickUp(wxMouseEvent& event)
+{
+	if (!dragging && moving)
+	{
+		int panel_width, panel_height;
+		display_panel->GetClientSize(&panel_width, &panel_height);
+		int n = (moving->type == Type::TRIANGLE) ? 3 : 4;
+		wxPoint* points = moving->GetPoints();
+		bool reset = false;
+		bool on_display = false;
+		bool in_container = false;
+
+		for (int i = 0; i < n; i++)
+		{
+			if (points[i].x <= 0 || points[i].x >= panel_width || points[i].y <= 0 || points[i].y >= panel_height)
+			{
+				reset = true;
+				break;
+			}
+			else if (points[i].x > 800)
+			{
+				if (points[i].y > 320)
+				{
+					reset = true;
+					break;
+				}
+				else
+				{
+					in_container = true;
+				}
+			}
+			else
+			{
+				on_display = true;
+			}
+		}
+
+		auto ptr = moving;
+		if (reset || (on_display && in_container))
+		{
+			moving->Reset();
+			moving->in_container = true;
+		}
+		else if (on_display)
+		{
+			moving->in_container = false;
+		}
+		else if (in_container)
+		{
+			moving->in_container = true;
+		}
+		moving = nullptr;
+		Refresh();
+	}
+}
+
+void MainFrame::OnScroll(wxMouseEvent& event)
+{
+	if (moving)
+	{
+		if (event.GetWheelRotation() < 0)
+		{
+			moving->Rotate(-30);
+		}
+		else
+		{
+			moving->Rotate(30);
+		}
+		Refresh();
 	}
 }
 
@@ -51,17 +149,19 @@ void MainFrame::Render(wxPaintEvent& event)
 	dc.DrawLine(800, 0, 800, 720);
 	dc.DrawLine(800, 320, 1280, 320);
 
-	for (auto& object : container)
+
+	for (auto& object : shapes)
 	{
 		(*object).Draw(dc);
 	}
 }
 
 
+
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 {
 	int n;
-	if (shape.type == triangle)
+	if (shape.type == Type::TRIANGLE)
 		n = 3;
 	else
 		n = 4;
@@ -136,4 +236,10 @@ bool Segment(const wxPoint& p, const wxPoint& q, const wxPoint& r)
 	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y))
 		return true;
 	return false;
+}
+
+MainFrame::~MainFrame()
+{
+	display_panel->Disconnect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
+	display_panel->Disconnect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 }
