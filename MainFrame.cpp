@@ -17,6 +17,22 @@ MainFrame::MainFrame(wxWindow* parent)
 	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 	display_panel->Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(MainFrame::OnScroll), NULL, this);
+
+	wxMenuBar* menuBar = new wxMenuBar();
+	wxMenu* fileMenu = new wxMenu();
+	menuBar->Append(fileMenu, _("&Shapes"));
+	SetMenuBar(menuBar);
+
+	fileMenu->AppendRadioItem(1, _("&Whale"));
+	fileMenu->AppendRadioItem(2, _("&House"));
+	fileMenu->AppendRadioItem(3, _("&Swan"));
+
+	level = new Level();
+	level->SetLevel("assets/wieloryb.geo");
+
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/wieloryb.geo"); Refresh(); }, 1);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/dom.geo"); Refresh(); }, 2);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/labedz.geo"); Refresh(); }, 3);
 }
 
 void MainFrame::OnClick(wxMouseEvent& event)
@@ -154,6 +170,8 @@ void MainFrame::Render(wxPaintEvent& event)
 	{
 		(*object).Draw(dc);
 	}
+
+	level->Draw(dc);
 }
 
 
@@ -242,4 +260,6 @@ MainFrame::~MainFrame()
 {
 	display_panel->Disconnect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Disconnect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
+
+	delete level;
 }
