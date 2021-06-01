@@ -26,6 +26,8 @@ bool Intersect(const wxPoint& p1, const wxPoint& q1, const wxPoint& p2, const wx
 int Orientation(const wxPoint& p, const wxPoint& q, const wxPoint& r);
 bool Segment(const wxPoint& p, const wxPoint& q, const wxPoint& r);
 
+bool ShapeOverlap(Shape& polygon1, Shape& polygon2);
+
 /** Implementing Frame */
 class MainFrame : public Frame
 {

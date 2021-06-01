@@ -120,7 +120,21 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 			}
 		}
 
-		auto ptr = moving;
+		if (!reset)
+		{
+			for (std::unique_ptr<Shape>& shape_uptr : shapes)
+			{
+				if (shape_uptr.get() != moving)
+				{
+					if (ShapeOverlap(*moving, *shape_uptr))
+					{
+						reset = true;
+						break;
+					}
+				}
+			}
+		}
+
 		if (reset || (on_display && in_container))
 		{
 			moving->Reset();
@@ -254,6 +268,73 @@ bool Segment(const wxPoint& p, const wxPoint& q, const wxPoint& r)
 	if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y))
 		return true;
 	return false;
+}
+
+bool ShapeOverlap(Shape& shape1, Shape& shape2)
+{
+	Shape* poly1 = &shape1;
+	Shape* poly2 = &shape2;
+
+	for (int shape = 0; shape < 2; shape++)
+	{
+		if (shape == 1)
+		{
+			poly1 = &shape2;
+			poly2 = &shape1;
+		}
+
+		int n1 = (poly1->type == Type::TRIANGLE) ? 3 : 4;
+		int n2 = (poly2->type == Type::TRIANGLE) ? 3 : 4;
+
+		auto points1 = poly1->GetPoints();
+		auto points2 = poly2->GetPoints();
+
+		for (int a = 0; a < n1; a++)
+		{
+			int b = (a + 1) % n1;
+			wxPoint axisProjection = wxPoint(-(points1[b].y - points1[a].y), points1[b].x - points1[a].x);
+
+			double min1, max1;
+			for (int i = 0; i < n1; i++)
+			{
+				double q = points1[i].x * static_cast<double>(axisProjection.x) + points1[i].y * static_cast<double>(axisProjection.y);
+				
+				if (i)
+				{
+					min1 = std::min(min1, q);
+					max1 = std::max(max1, q);
+				}
+				else
+				{
+					min1 = q;
+					max1 = q;
+				}
+			}
+
+			double min2, max2;
+			for (int i = 0; i < n2; i++)
+			{
+				double q = points2[i].x * static_cast<double>(axisProjection.x) + points2[i].y * static_cast<double>(axisProjection.y);
+
+				if (i)
+				{
+					min2 = std::min(min2, q);
+					max2 = std::max(max2, q);
+				}
+				else
+				{
+					min2 = q;
+					max2 = q;
+				}
+			}
+
+			if (!(max2 >= min1 && max1 >= min2))
+				return false;
+		}
+
+	}
+
+	return true;
 }
 
 MainFrame::~MainFrame()
