@@ -23,8 +23,8 @@ void Quadrangle::Draw(wxAutoBufferedPaintDC& panel)
 }
 void Quadrangle::Rotate(double angle)
 {
-	int x0 = (pos[0].x + pos[1].x + pos[2].x + pos[3].x) / 4;
-	int y0 = (pos[0].y + pos[1].y + pos[2].y + pos[3].y) / 4;
+	double x0 = (pos[0].x + pos[1].x + pos[2].x + pos[3].x) / 4.;
+	double y0 = (pos[0].y + pos[1].y + pos[2].y + pos[3].y) / 4.;
 	angle *= M_PI / 180.0;
 
 	Matrix translate1, translate2;

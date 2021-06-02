@@ -42,7 +42,8 @@ class MainFrame : public Frame
 
 		void OnClickUp(wxMouseEvent& event);
 		void Mouse_Move(wxMouseEvent& event);
-		void OnScroll(wxMouseEvent& event);
+		void OnRightUp(wxMouseEvent& event);
+		void OnRightDown(wxMouseEvent& event);
 		~MainFrame();
 protected:
 	Level* level;
@@ -51,6 +52,7 @@ protected:
 	wxPoint mouse_pos;
 	wxPoint mouse_prev;
 	bool dragging = false;
+	bool scrolling = false;
 };
 
 #endif // __MainFrame__

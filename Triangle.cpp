@@ -21,8 +21,8 @@ void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 }
 void Triangle::Rotate(double angle)
 {
-	int x0 = (pos[0].x + pos[1].x + pos[2].x) / 3;
-	int y0 = (pos[0].y + pos[1].y + pos[2].y) / 3;
+	double x0 = (pos[0].x + pos[1].x + pos[2].x) / 3.;
+	double y0 = (pos[0].y + pos[1].y + pos[2].y) / 3.;
 	angle *= M_PI / 180.0;
 
 	Matrix translate1, translate2;

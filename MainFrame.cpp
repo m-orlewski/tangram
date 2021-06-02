@@ -16,7 +16,8 @@ MainFrame::MainFrame(wxWindow* parent)
 
 	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
-	display_panel->Connect(wxEVT_MOUSEWHEEL, wxMouseEventHandler(MainFrame::OnScroll), NULL, this);
+	display_panel->Connect(wxEVT_RIGHT_UP, wxMouseEventHandler(MainFrame::OnRightUp), NULL, this);
+	display_panel->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(MainFrame::OnRightDown), NULL, this);
 
 	wxMenuBar* menuBar = new wxMenuBar();
 	wxMenu* fileMenu = new wxMenu();
@@ -74,7 +75,7 @@ void MainFrame::OnClick(wxMouseEvent& event)
 
 void MainFrame::Mouse_Move(wxMouseEvent& event)
 {
-	if (moving != nullptr)
+	if (moving != nullptr && !scrolling)
 	{
 		mouse_prev = mouse_pos;
 		mouse_pos = wxPoint(event.GetX(), event.GetY());
@@ -153,20 +154,30 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 	}
 }
 
-void MainFrame::OnScroll(wxMouseEvent& event)
+void MainFrame::OnRightUp(wxMouseEvent& event)
 {
 	if (moving)
-	{
+	{	
+		mouse_prev = mouse_pos;
+		mouse_pos = wxPoint(event.GetX(), event.GetY());
+		moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
+		Refresh();
 		if (event.GetWheelRotation() < 0)
 		{
-			moving->Rotate(-30);
+			moving->Rotate(-90);
 		}
 		else
 		{
-			moving->Rotate(30);
+			moving->Rotate(90);
 		}
 		Refresh();
 	}
+	scrolling = false;
+}
+
+void MainFrame::OnRightDown(wxMouseEvent& event)
+{
+	scrolling = true;
 }
 
 void MainFrame::Render(wxPaintEvent& event)
@@ -341,6 +352,9 @@ MainFrame::~MainFrame()
 {
 	display_panel->Disconnect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Disconnect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
+	display_panel->Disconnect(wxEVT_RIGHT_UP, wxMouseEventHandler(MainFrame::OnRightUp), NULL, this);
+	display_panel->Disconnect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(MainFrame::OnRightDown), NULL, this);
 
 	delete level;
 }
+
