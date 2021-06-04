@@ -52,7 +52,7 @@ protected:
 	wxPoint mouse_pos;
 	wxPoint mouse_prev;
 	bool dragging = false;
-	bool scrolling = false;
+	bool rotating = false;
 };
 
 #endif // __MainFrame__

@@ -75,7 +75,7 @@ void MainFrame::OnClick(wxMouseEvent& event)
 
 void MainFrame::Mouse_Move(wxMouseEvent& event)
 {
-	if (moving != nullptr && !scrolling)
+	if (moving != nullptr && !rotating)
 	{
 		mouse_prev = mouse_pos;
 		mouse_pos = wxPoint(event.GetX(), event.GetY());
@@ -158,26 +158,27 @@ void MainFrame::OnRightUp(wxMouseEvent& event)
 {
 	if (moving)
 	{	
-		mouse_prev = mouse_pos;
-		mouse_pos = wxPoint(event.GetX(), event.GetY());
-		moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
-		Refresh();
+		//mouse_prev = mouse_pos;
+		//mouse_pos = wxPoint(event.GetX(), event.GetY());
+		//moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
+		//Refresh();
 		if (event.GetWheelRotation() < 0)
 		{
-			moving->Rotate(-90);
+			moving->Rotate(-45);
 		}
 		else
 		{
-			moving->Rotate(90);
+			moving->Rotate(45);
 		}
 		Refresh();
+		rotating = false;
 	}
-	scrolling = false;
 }
 
 void MainFrame::OnRightDown(wxMouseEvent& event)
 {
-	scrolling = true;
+	if (moving)
+		rotating = true;
 }
 
 void MainFrame::Render(wxPaintEvent& event)
