@@ -30,7 +30,7 @@ MainFrame::MainFrame(wxWindow* parent)
 	fileMenu->AppendRadioItem(4, _("&Statek"));
 
 	level = new Level();
-	level->SetLevel("assets/wieloryb.geo", "assets/statek_s.geo");
+	level->SetLevel("assets/domek_r.geo", "assets/domek_s.geo");
 
 	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/wieloryb.geo"); Refresh(); }, 1);
 	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/dom.geo"); Refresh(); }, 2);
@@ -198,7 +198,10 @@ void MainFrame::Render(wxPaintEvent& event)
 		(*object).Draw(dc);
 	}
 
-	level->Draw(dc);
+    level->Draw(dc);
+	
+
+
 }
 
 
