@@ -27,13 +27,14 @@ MainFrame::MainFrame(wxWindow* parent)
 	fileMenu->AppendRadioItem(1, _("&Whale"));
 	fileMenu->AppendRadioItem(2, _("&House"));
 	fileMenu->AppendRadioItem(3, _("&Swan"));
+	fileMenu->AppendRadioItem(4, _("&Statek"));
 
 	level = new Level();
-	level->SetLevel("assets/wieloryb.geo");
+	level->SetLevel("assets/wieloryb.geo", "assets/statek_s.geo");
 
-	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/wieloryb.geo"); Refresh(); }, 1);
-	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/dom.geo"); Refresh(); }, 2);
-	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/labedz.geo"); Refresh(); }, 3);
+	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/wieloryb.geo"); Refresh(); }, 1);
+	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/dom.geo"); Refresh(); }, 2);
+	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/labedz.geo"); Refresh(); }, 3);
 }
 
 void MainFrame::OnClick(wxMouseEvent& event)
