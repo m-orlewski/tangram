@@ -187,6 +187,7 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 				for (auto& shape : shapes)
 				{
 					shape->Reset();
+					shape->in_container = true;
 				}
 			}
 			Refresh();
@@ -377,7 +378,7 @@ bool ShapeOverlap(Shape& shape1, Shape& shape2)
 				}
 			}
 
-			if (!(max2 >= min1 && max1 >= min2))
+			if (!(max2 > min1 && max1 > min2))
 				return false;
 		}
 

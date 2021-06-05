@@ -130,7 +130,7 @@ bool Level::CheckLevel(const std::vector<std::unique_ptr<Shape>>& shapes)
 				bool found = false;
 				for (auto& point : poly.points)
 				{
-					if (abs(points1[i].x - point.x) <= 20 && abs(points1[i].y - point.y) <= 20)
+					if (points1 && abs(points1[i].x - point.x) <= 23 && abs(points1[i].y - point.y) <= 23)
 					{
 						found = true;
 						break;
@@ -150,7 +150,7 @@ bool Level::CheckLevel(const std::vector<std::unique_ptr<Shape>>& shapes)
 					bool found = false;
 					for (auto& point : poly.points)
 					{
-						if (abs(points2[i].x - point.x) <= 20 && abs(points2[i].y - point.y) <= 20)
+						if (points2 && abs(points2[i].x - point.x) <= 23 && abs(points2[i].y - point.y) <= 23)
 						{
 							found = true;
 							break;
@@ -181,7 +181,7 @@ bool Level::CheckLevel(const std::vector<std::unique_ptr<Shape>>& shapes)
 				bool found = false;
 				for (auto& point : poly.points)
 				{
-					if (abs(points[i].x - point.x) <= 20 && abs(points[i].y - point.y) <= 20)
+					if (points && abs(points[i].x - point.x) <= 23 && abs(points[i].y - point.y) <= 23)
 					{
 						found = true;
 						break;
