@@ -30,7 +30,7 @@ MainFrame::MainFrame(wxWindow* parent)
 	fileMenu->AppendRadioItem(4, _("&Statek"));
 
 	level = new Level();
-	level->SetLevel("assets/wieloryb.geo", "assets/statek_s.geo");
+	level->SetLevel("assets/kot_r.geo", "assets/kot_s.geo");
 
 	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/wieloryb.geo"); Refresh(); }, 1);
 	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/dom.geo"); Refresh(); }, 2);

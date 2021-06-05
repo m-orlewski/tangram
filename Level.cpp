@@ -34,7 +34,7 @@ void Level::SetLevel(std::string filename1, std::string filename2)
 				points.clear();
 			}
 			
-			points.push_back(wxPoint(x1 + 200, y1 + 200));
+			points.push_back(wxPoint(x1 + 200, y1 + 100));
 		}
 		check.push_back(Poly(points, type));
 	}
