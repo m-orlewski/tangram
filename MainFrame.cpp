@@ -198,7 +198,10 @@ void MainFrame::Render(wxPaintEvent& event)
 		(*object).Draw(dc);
 	}
 
-	level->Draw(dc);
+    level->Draw(dc);
+	
+
+
 }
 
 
