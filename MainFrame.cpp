@@ -76,7 +76,9 @@ void MainFrame::OnClick(wxMouseEvent& event)
 			}
 		}
 	}
-	
+	if (moving)
+		moving->color = wxColor("red");
+	Refresh();
 }
 
 void MainFrame::Mouse_Move(wxMouseEvent& event)
@@ -101,6 +103,7 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 		bool reset = false;
 		bool on_display = false;
 		bool in_container = false;
+		bool overlap = false;
 
 		for (int i = 0; i < n; i++)
 		{
@@ -135,6 +138,7 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 					if (ShapeOverlap(*moving, *shape_uptr))
 					{
 						reset = true;
+						overlap = true;
 						break;
 					}
 				}
@@ -143,13 +147,16 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 
 		if (reset || (on_display && in_container))
 		{
-			//moving->Reset();
-			//moving->in_container = true;
-			moving->color = wxColor("red");
-			Refresh();
-			moving->color = wxColor("grey");
-			Refresh();
-			return;
+			if (!overlap)
+			{
+				moving->Reset();
+				moving->in_container = true;
+			}
+			else
+			{
+				dragging = true;
+				return;
+			}
 		}
 		else if (on_display)
 		{
@@ -159,6 +166,7 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 		{
 			moving->in_container = true;
 		}
+		moving->color = wxColor("grey");
 		moving = nullptr;
 		Refresh();
 
@@ -215,8 +223,7 @@ void MainFrame::Render(wxPaintEvent& event)
 	dc.SetBackground(wxBrush(wxColour("white")));
 	dc.Clear();
 
-
-	dc.SetPen(wxPen(wxColour("black"), 1));
+	dc.SetPen(wxPen(wxColour("black"), 3));
 	dc.DrawLine(800, 0, 800, 720);
 	dc.DrawLine(800, 320, 1280, 320);
 
@@ -224,12 +231,13 @@ void MainFrame::Render(wxPaintEvent& event)
 
 	for (auto& object : shapes)
 	{
-		(*object).Draw(dc);
+		if (object.get() != moving)
+			(*object).Draw(dc);
 	}
 
+	if (moving)
+		moving->Draw(dc);
 }
-
-
 
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 {

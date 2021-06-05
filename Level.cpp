@@ -50,15 +50,15 @@ void Level::Draw(wxAutoBufferedPaintDC& panel)
 	panel.SetBrush(wxColor("black"));
 	panel.DrawPolygon(polygon.size(), polygon.data());
 
-	panel.SetPen(wxColor("black"));
-	panel.SetBrush(wxColor("grey"));
-	for (auto& poly : check_copy)
-	{
-		if (poly.type > Type(3))
-			panel.DrawPolygon(4, poly.points.data());
-		else
-			panel.DrawPolygon(3, poly.points.data());
-	}
+	//panel.SetPen(wxColor("black"));
+	//panel.SetBrush(wxColor("grey"));
+	//for (auto& poly : check_copy)
+	//{
+	//	if (poly.type > Type(3))
+	//		panel.DrawPolygon(4, poly.points.data());
+	//	else
+	//		panel.DrawPolygon(3, poly.points.data());
+	//}
 }
 
 bool Level::CheckLevel(const std::vector<std::unique_ptr<Shape>>& shapes)
