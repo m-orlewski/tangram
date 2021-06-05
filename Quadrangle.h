@@ -5,7 +5,7 @@
 class Quadrangle : public Shape
 {
 public:
-	Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, wxColour c);
+	Quadrangle(int x1, int x2, int x3, int x4, int y1, int y2, int y3, int y4, wxColour c, Type t);
 	void Draw(wxAutoBufferedPaintDC& panel) override;
 	void Rotate(double radian) override;
 	void Move(int dx, int dy) override;

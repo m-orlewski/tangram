@@ -20,10 +20,10 @@ public:
 	virtual void Reset() const = 0;
 	virtual ~Shape() {}
 protected:
-	wxColour color;
 	wxPoint* start;
 	wxPoint* pos;
 public:
 	const Type type;
 	bool in_container = true;
+	wxColour color;
 };

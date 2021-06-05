@@ -6,13 +6,13 @@ MainFrame::MainFrame(wxWindow* parent)
 {
 	display_panel->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
-	shapes.push_back(std::make_unique<Triangle>(920, 1160, 1040, 20, 20, 140, wxColour("red")));
-	shapes.push_back(std::make_unique<Triangle>(920, 920, 1040, 20, 260, 140, wxColour("yellow")));
-	shapes.push_back(std::make_unique<Triangle>(920, 980, 1040, 260, 200, 260, wxColour("blue")));
-	shapes.push_back(std::make_unique<Triangle>(1040, 1100, 1100, 140, 200, 80, wxColour("black")));
-	shapes.push_back(std::make_unique<Triangle>(1040, 1160, 1160, 260, 140, 260, wxColour("green")));
-	shapes.push_back(std::make_unique<Quadrangle>(1040, 1100, 1040, 980, 140, 200, 260, 200, wxColour("grey")));
-	shapes.push_back(std::make_unique<Quadrangle>(1100, 1100, 1160, 1160, 80, 200, 140, 20, wxColour("cyan")));
+	shapes.push_back(std::make_unique<Triangle>(920, 1160, 1040, 20, 20, 140, wxColour("grey"), Type::TRIANGLE1));
+	shapes.push_back(std::make_unique<Triangle>(920, 920, 1040, 20, 260, 140, wxColour("grey"), Type::TRIANGLE1));
+	shapes.push_back(std::make_unique<Triangle>(920, 980, 1040, 260, 200, 260, wxColour("grey"), Type::TRIANGLE2));
+	shapes.push_back(std::make_unique<Triangle>(1040, 1100, 1100, 140, 200, 80, wxColour("grey"), Type::TRIANGLE2));
+	shapes.push_back(std::make_unique<Triangle>(1040, 1160, 1160, 260, 140, 260, wxColour("grey"), Type::TRIANGLE3));
+	shapes.push_back(std::make_unique<Quadrangle>(1040, 1100, 1040, 980, 140, 200, 260, 200, wxColour("grey"), Type::QUADRANGLE4));
+	shapes.push_back(std::make_unique<Quadrangle>(1100, 1100, 1160, 1160, 80, 200, 140, 20, wxColour("grey"), Type::QUADRANGLE5));
 
 	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
@@ -24,17 +24,22 @@ MainFrame::MainFrame(wxWindow* parent)
 	menuBar->Append(fileMenu, _("&Shapes"));
 	SetMenuBar(menuBar);
 
-	fileMenu->AppendRadioItem(1, _("&Whale"));
-	fileMenu->AppendRadioItem(2, _("&House"));
-	fileMenu->AppendRadioItem(3, _("&Swan"));
-	fileMenu->AppendRadioItem(4, _("&Statek"));
+	fileMenu->AppendRadioItem(1, _("Stó³"));
+	fileMenu->AppendRadioItem(2, _("Buda"));
+	fileMenu->AppendRadioItem(3, _("Kot"));
+	fileMenu->AppendRadioItem(4, _("Statek"));
+	fileMenu->AppendRadioItem(5, _("Murek"));
+	fileMenu->AppendRadioItem(6, _("Dom"));
 
 	level = new Level();
-	level->SetLevel("assets/kot_r.geo", "assets/kot_s.geo");
+	level->SetLevel("assets/stol_r.geo", "assets/stol_s.geo");
 
-	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/wieloryb.geo"); Refresh(); }, 1);
-	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/dom.geo"); Refresh(); }, 2);
-	//this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/labedz.geo"); Refresh(); }, 3);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/stol_r.geo", "assets/stol_s.geo"); Refresh(); }, 1);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/buda_r.geo", "assets/buda_s.geo"); Refresh(); }, 2);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/kot_r.geo", "assets/kot_s.geo"); Refresh(); }, 3);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/statek_r.geo", "assets/statek_s.geo"); Refresh(); }, 4);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/murek_r.geo", "assets/murek_s.geo"); Refresh(); }, 5);
+	this->Bind(wxEVT_MENU, [&, this](wxCommandEvent&) { level->SetLevel("assets/domek_r.geo", "assets/domek_s.geo"); Refresh(); }, 6);
 }
 
 void MainFrame::OnClick(wxMouseEvent& event)
@@ -91,7 +96,7 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 	{
 		int panel_width, panel_height;
 		display_panel->GetClientSize(&panel_width, &panel_height);
-		int n = (moving->type == Type::TRIANGLE) ? 3 : 4;
+		int n = (moving->type < Type::QUADRANGLE4) ? 3 : 4;
 		wxPoint* points = moving->GetPoints();
 		bool reset = false;
 		bool on_display = false;
@@ -121,7 +126,6 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 				on_display = true;
 			}
 		}
-
 		if (!reset)
 		{
 			for (std::unique_ptr<Shape>& shape_uptr : shapes)
@@ -139,8 +143,13 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 
 		if (reset || (on_display && in_container))
 		{
-			moving->Reset();
-			moving->in_container = true;
+			//moving->Reset();
+			//moving->in_container = true;
+			moving->color = wxColor("red");
+			Refresh();
+			moving->color = wxColor("grey");
+			Refresh();
+			return;
 		}
 		else if (on_display)
 		{
@@ -152,6 +161,28 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 		}
 		moving = nullptr;
 		Refresh();
+
+		bool all_on_display = true;
+		for (auto& shape : shapes)
+		{
+			if ((*shape).in_container)
+			{
+				all_on_display = false;
+				break;
+			}
+		}
+
+		if (all_on_display)
+		{
+			if (level->CheckLevel(shapes))
+			{
+				for (auto& shape : shapes)
+				{
+					shape->Reset();
+				}
+			}
+			Refresh();
+		}
 	}
 }
 
@@ -159,10 +190,6 @@ void MainFrame::OnRightUp(wxMouseEvent& event)
 {
 	if (moving)
 	{	
-		//mouse_prev = mouse_pos;
-		//mouse_pos = wxPoint(event.GetX(), event.GetY());
-		//moving->Move(mouse_pos.x - mouse_prev.x, mouse_pos.y - mouse_prev.y);
-		//Refresh();
 		if (event.GetWheelRotation() < 0)
 		{
 			moving->Rotate(-45);
@@ -188,19 +215,17 @@ void MainFrame::Render(wxPaintEvent& event)
 	dc.SetBackground(wxBrush(wxColour("white")));
 	dc.Clear();
 
+
 	dc.SetPen(wxPen(wxColour("black"), 1));
 	dc.DrawLine(800, 0, 800, 720);
 	dc.DrawLine(800, 320, 1280, 320);
 
+	level->Draw(dc);
 
 	for (auto& object : shapes)
 	{
 		(*object).Draw(dc);
 	}
-
-    level->Draw(dc);
-	
-
 
 }
 
@@ -209,7 +234,7 @@ void MainFrame::Render(wxPaintEvent& event)
 bool isInside(const Shape& shape, wxPoint& mouse, bool on_display)
 {
 	int n;
-	if (shape.type == Type::TRIANGLE)
+	if (shape.type < Type::QUADRANGLE4)
 		n = 3;
 	else
 		n = 4;
@@ -299,8 +324,8 @@ bool ShapeOverlap(Shape& shape1, Shape& shape2)
 			poly2 = &shape1;
 		}
 
-		int n1 = (poly1->type == Type::TRIANGLE) ? 3 : 4;
-		int n2 = (poly2->type == Type::TRIANGLE) ? 3 : 4;
+		int n1 = (poly1->type < Type::QUADRANGLE4) ? 3 : 4;
+		int n2 = (poly2->type < Type::QUADRANGLE4) ? 3 : 4;
 
 		auto points1 = poly1->GetPoints();
 		auto points2 = poly2->GetPoints();

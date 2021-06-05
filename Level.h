@@ -4,6 +4,9 @@
 
 #include <vector>
 #include <fstream>
+#include <cmath>
+
+#include "Shape.h"
 
 #include <wx/wx.h>
 #include <wx/wxprec.h>
@@ -13,8 +16,8 @@
 struct Poly
 {
 	std::vector<wxPoint> points;
-	int type;
-	Poly(std::vector<wxPoint> Points, int T) : points(Points), type(T) {}
+	Type type;
+	Poly(std::vector<wxPoint> Points, Type T) : points(Points), type(T) {}
 };
 
 class Level
@@ -22,7 +25,9 @@ class Level
 private:
 	std::vector<wxPoint> polygon;
 	std::vector<Poly> check;
+	std::vector<Poly> check_copy;
 public:
 	void SetLevel(std::string filename1, std::string filename2);
 	void Draw(wxAutoBufferedPaintDC& panel);
+	bool CheckLevel(const std::vector<std::unique_ptr<Shape>>& shapes);
 };

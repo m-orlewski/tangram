@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c): Shape(c, Type::TRIANGLE)
+Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c, Type t): Shape(c, t)
 {
 	start = new wxPoint[3];
 	pos = new wxPoint[3];
@@ -15,7 +15,7 @@ Triangle::Triangle(int x1, int x2, int x3, int y1, int y2, int y3, wxColour c): 
 }
 void Triangle::Draw(wxAutoBufferedPaintDC& panel)
 {
-	panel.SetPen(color);
+	panel.SetPen(wxColour("black"));
 	panel.SetBrush(color);
 	panel.DrawPolygon(3, pos);
 }
