@@ -44,6 +44,7 @@ class MainFrame : public Frame
 		void Mouse_Move(wxMouseEvent& event);
 		void OnRightUp(wxMouseEvent& event);
 		void OnRightDown(wxMouseEvent& event);
+		void OnMiddleUp(wxMouseEvent& event);
 		~MainFrame();
 protected:
 	Level* level;

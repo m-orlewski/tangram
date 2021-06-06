@@ -18,6 +18,7 @@ MainFrame::MainFrame(wxWindow* parent)
 	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 	display_panel->Connect(wxEVT_RIGHT_UP, wxMouseEventHandler(MainFrame::OnRightUp), NULL, this);
 	display_panel->Connect(wxEVT_RIGHT_DOWN, wxMouseEventHandler(MainFrame::OnRightDown), NULL, this);
+	display_panel->Connect(wxEVT_MIDDLE_UP, wxMouseEventHandler(MainFrame::OnMiddleUp), NULL, this);
 
 	wxMenuBar* menuBar = new wxMenuBar();
 	wxMenu* fileMenu = new wxMenu();
@@ -216,6 +217,32 @@ void MainFrame::OnRightDown(wxMouseEvent& event)
 {
 	if (moving)
 		rotating = true;
+}
+
+void MainFrame::OnMiddleUp(wxMouseEvent& event)
+{
+	if (!moving)
+	{
+		wxPoint mouse = wxPoint(event.GetX(), event.GetY());
+		for (auto& shape : shapes)
+		{
+			if (isInside(*shape, mouse, true))
+			{
+				shape->Reset();
+				shape->in_container = true;
+				Refresh();
+			}
+		}
+	}
+	else
+	{
+		moving->Reset();
+		moving->color = wxColor("grey");
+		moving->in_container = true;
+		moving = nullptr;
+		dragging = false;
+		Refresh();
+	}
 }
 
 void MainFrame::Render(wxPaintEvent& event)
