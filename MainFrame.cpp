@@ -185,10 +185,18 @@ void MainFrame::OnClickUp(wxMouseEvent& event)
 		{
 			if (level->CheckLevel(shapes))
 			{
-				for (auto& shape : shapes)
+				int answer = wxMessageBox("Zwyciêstwo!", "Czy chcesz zagraæ ponownie?", wxYES_NO, this);
+				if (answer == wxYES)
 				{
-					shape->Reset();
-					shape->in_container = true;
+					for (auto& shape : shapes)
+					{
+						shape->Reset();
+						shape->in_container = true;
+					}
+				}
+				else if (answer == wxNO)
+				{
+					Close();
 				}
 			}
 			Refresh();
