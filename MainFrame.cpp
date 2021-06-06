@@ -14,6 +14,8 @@ MainFrame::MainFrame(wxWindow* parent)
 	shapes.push_back(std::make_unique<Quadrangle>(1040, 1100, 1040, 980, 140, 200, 260, 200, wxColour("grey"), Type::QUADRANGLE4));
 	shapes.push_back(std::make_unique<Quadrangle>(1100, 1100, 1160, 1160, 80, 200, 140, 20, wxColour("grey"), Type::QUADRANGLE5));
 
+	display_panel->Connect(wxEVT_LEFT_DOWN, wxMouseEventHandler(MainFrame::OnClick), NULL, this);
+	display_panel->Connect(wxEVT_PAINT, wxPaintEventHandler(MainFrame::Render), NULL, this);
 	display_panel->Connect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Connect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 	display_panel->Connect(wxEVT_RIGHT_UP, wxMouseEventHandler(MainFrame::OnRightUp), NULL, this);
@@ -277,6 +279,8 @@ void MainFrame::Render(wxPaintEvent& event)
 
 MainFrame::~MainFrame()
 {
+	display_panel->Disconnect(wxEVT_LEFT_DOWN, wxMouseEventHandler(MainFrame::OnClick), NULL, this);
+	display_panel->Disconnect(wxEVT_PAINT, wxPaintEventHandler(MainFrame::Render), NULL, this);
 	display_panel->Disconnect(wxEVT_MOTION, wxMouseEventHandler(MainFrame::Mouse_Move), NULL, this);
 	display_panel->Disconnect(wxEVT_LEFT_UP, wxMouseEventHandler(MainFrame::OnClickUp), NULL, this);
 	display_panel->Disconnect(wxEVT_RIGHT_UP, wxMouseEventHandler(MainFrame::OnRightUp), NULL, this);
